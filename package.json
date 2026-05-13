@@ -1,0 +1,29 @@
+{
+  "name": "@agiterra/wallet-tools",
+  "version": "0.1.0",
+  "description": "Wallet primitives — EIP-1193 types, Wire topic constants, decider protocol shapes, sign helpers, and Node-side test driver for the agent wallet system.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./topics": "./src/topics.ts",
+    "./types": "./src/types.ts",
+    "./sign": "./src/sign.ts",
+    "./vault": "./src/vault.ts",
+    "./test": "./src/test.ts"
+  },
+  "files": [
+    "src/"
+  ],
+  "dependencies": {
+    "@agiterra/wire-tools": "agiterra/wire-tools#v2.3.5",
+    "@noble/curves": "^1.6.0",
+    "@noble/hashes": "^1.5.0"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "typescript": "^6.0.3"
+  },
+  "license": "MIT",
+  "author": "Tim Garthwaite <https://github.com/mividtim>"
+}
