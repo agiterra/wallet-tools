@@ -1,6 +1,6 @@
 {
   "name": "@agiterra/wallet-tools",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Wallet primitives — EIP-1193 types, Wire topic constants, decider protocol shapes, sign helpers, and Node-side test driver for the agent wallet system.",
   "type": "module",
   "main": "./src/index.ts",

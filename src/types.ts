@@ -130,3 +130,45 @@ export interface VaultSnapshot {
   source: string;
   published_at: number;
 }
+
+// --- Plugin-settings shape for the wallet-vault namespace ---
+
+export type WalletAccessMode = "creator-only" | "specific" | "all";
+
+/**
+ * Public metadata + access policy for a single wallet. Stored in Wire's
+ * plugin_settings under `namespace="wallet-vault" key="wallets"` keyed
+ * by lowercase Ethereum address. Encrypted private keys live separately
+ * in the extension's chrome.storage.local — Wire only knows public facts.
+ */
+export interface WalletMeta {
+  /** Agent-given name. Used by agents to look up wallets via wallet_use({name}). */
+  name: string;
+  /** Operator override (optional). Takes precedence over `name` in dashboards. */
+  operator_name?: string;
+  /** Wire agent_id that created the wallet. */
+  creator: string;
+  created_at: number;
+  /** Default chain when the wallet is selected. */
+  chain_id: number;
+  /** Access policy. `agents` is populated when mode === "specific". */
+  access: {
+    mode: WalletAccessMode;
+    agents: string[];
+  };
+}
+
+export type WalletDirectory = Record<string, WalletMeta>; // lowercase-address → meta
+
+// --- Tab-claim channel: agent binds a wallet to a browser tab ---
+
+export interface WalletTabClaimRequest {
+  /** Browser tab identifier (Chrome MCP tabId, Browser Use session id, etc.). */
+  tab_id: string;
+  /** 0x-prefixed wallet address the agent wants to drive from this tab. */
+  wallet_address: string;
+}
+
+export const WALLET_VAULT_TAB_CLAIM = "wallet.vault.tab_claim";
+export const WALLET_VAULT_CREATE_REQUEST = "wallet.vault.create_request";
+export const WALLET_VAULT_CREATED = "wallet.vault.created";
