@@ -172,3 +172,40 @@ export interface WalletTabClaimRequest {
 export const WALLET_VAULT_TAB_CLAIM = "wallet.vault.tab_claim";
 export const WALLET_VAULT_CREATE_REQUEST = "wallet.vault.create_request";
 export const WALLET_VAULT_CREATED = "wallet.vault.created";
+
+// --- Tab-claim ack + release (AGI-16) ---
+
+/** Release a tab's wallet binding. Honored only when the sender is the
+ *  claim's owner (or there is no claim, in which case it's a no-op). */
+export interface WalletTabReleaseRequest {
+  tab_id: string;
+}
+
+export const WALLET_VAULT_TAB_RELEASE = "wallet.vault.tab_release";
+
+/**
+ * Outcome of a tab-claim, written by the extension to Wire's
+ * plugin_settings under `tabClaimSettingKey(tab_id)` in the vault's
+ * namespace. This is what makes `wallet_use` fail-loud: the MCP tool
+ * polls this key after publishing the claim and surfaces a refusal
+ * (with reason) instead of reporting fire-and-forget success. A
+ * released claim DELETEs the key, so `wallet_release` polls for
+ * absence.
+ */
+export interface WalletTabClaimStatus {
+  tab_id: string;
+  /** Lowercase 0x address the claim targeted. */
+  wallet_address: string;
+  /** Wire agent_id whose claim this outcome answers. */
+  agent_id: string;
+  status: "accepted" | "refused";
+  /** Present when status === "refused" (e.g. unknown wallet, no access,
+   *  wallet not in this extension instance's local vault). */
+  reason?: string;
+  at: number;
+}
+
+/** plugin_settings key for a tab's claim outcome: `tab_claim:<tab_id>`. */
+export function tabClaimSettingKey(tabId: string): string {
+  return `tab_claim:${tabId}`;
+}
